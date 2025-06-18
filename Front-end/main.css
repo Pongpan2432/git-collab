@@ -4,6 +4,15 @@
   padding: 0;
 }
 
+h1 {
+  text-align: center;
+  text-decoration-line: underline;
+}
+
+p {
+  text-align: center;
+}
+
 /* Container เต็มจอ */
 .slideshow-container {
   width: 100vw;
@@ -110,3 +119,4 @@
   from {opacity: .4}
   to {opacity: 1}
 }
+
