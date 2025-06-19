@@ -1,87 +1,618 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="main.css">
-    <title>SKY Lover</title>
+    <title>Slides Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid #e9ecef;
+        }
+
+        .form-section h2 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        input[type="text"], input[type="url"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="url"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+        }
+
+        .slides-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .slide-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .slide-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .slide-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f8f9fa;
+        }
+
+        .slide-content {
+            padding: 20px;
+        }
+
+        .slide-id {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 10px;
+            font-family: monospace;
+        }
+
+        .slide-caption {
+            font-size: 16px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 15px;
+        }
+
+        .slide-src {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+
+        .slide-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .slide-actions .btn {
+            padding: 8px 16px;
+            font-size: 12px;
+            flex: 1;
+            min-width: 70px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #c3e6cb;
+        }
+
+        .edit-mode {
+            background: #fff3cd !important;
+            border: 2px solid #ffc107 !important;
+        }
+
+        .edit-form {
+            display: none;
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .edit-form.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .slides-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .slide-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-    <H1>Welcome to Sky Lover</H1>
-    <p>Take your time!</p>
-    <div class="slideshow-container">
+    <div class="container">
+        <div class="header">
+            <h1>🎬 Slides Manager</h1>
+            <p>จัดการ Slides ด้วย CRUD Operations</p>
+        </div>
 
-    <div class="mySlides fade" style="display: block;">
-      <div class="numbertext">1 / 5</div>
-      <img src="imgs/image1.png" alt="Slide 1">
-      <div class="text">Sky 1</div>
+        <div class="content">
+            <!-- Add New Slide Form -->
+            <div class="form-section">
+                <h2>➕ เพิ่ม Slide ใหม่</h2>
+                <form id="addSlideForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="newSrc">URL รูปภาพ *</label>
+                            <input type="url" id="newSrc" placeholder="https://example.com/image.jpg" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newCaption">คำอธิบาย</label>
+                            <input type="text" id="newCaption" placeholder="คำอธิบายของรูปภาพ">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">เพิ่ม Slide</button>
+                </form>
+            </div>
+
+            <!-- Get Single Slide Form -->
+            <div class="form-section">
+                <h2>🔍 ค้นหา Slide</h2>
+                <form id="getSlideForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="slideId">Slide ID</label>
+                            <input type="text" id="slideId" placeholder="ใส่ ID ของ Slide">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">ค้นหา Slide</button>
+                </form>
+            </div>
+
+            <!-- Control Buttons -->
+            <div class="form-section">
+                <h2>🎮 การควบคุม</h2>
+                <button id="loadAllSlides" class="btn btn-primary">โหลดทุก Slides</button>
+                <button id="clearResults" class="btn btn-secondary">ล้างผลลัพธ์</button>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading">
+                <p>⏳ กำลังโหลด...</p>
+            </div>
+
+            <!-- Messages -->
+            <div id="messages"></div>
+
+            <!-- Slides Display -->
+            <div id="slidesContainer">
+                <div class="slides-grid" id="slidesGrid"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="mySlides fade" style="display: none;">
-      <div class="numbertext">2 / 5</div>
-      <img src="imgs/image2.jpg" alt="Slide 2">
-      <div class="text">Sky 2</div>
-    </div>
+    <script>
+        const API_BASE = '/api/slides';
+        let currentSlides = [];
 
-    <div class="mySlides fade" style="display: none;">
-      <div class="numbertext">3 / 5</div>
-      <img src="imgs/image3.png" alt="Slide 3">
-      <div class="text">Sky 3</div>
-    </div>
+        // DOM Elements
+        const addSlideForm = document.getElementById('addSlideForm');
+        const getSlideForm = document.getElementById('getSlideForm');
+        const loadAllSlidesBtn = document.getElementById('loadAllSlides');
+        const clearResultsBtn = document.getElementById('clearResults');
+        const loading = document.getElementById('loading');
+        const messages = document.getElementById('messages');
+        const slidesGrid = document.getElementById('slidesGrid');
 
-    <div class="mySlides fade" style="display: none;">
-      <div class="numbertext">4 / 5</div>
-      <img src="imgs/image4.jpg" alt="Slide 4">
-      <div class="text">Sky 4</div>
-    </div>
+        // Event Listeners
+        addSlideForm.addEventListener('submit', handleAddSlide);
+        getSlideForm.addEventListener('submit', handleGetSlide);
+        loadAllSlidesBtn.addEventListener('click', loadAllSlides);
+        clearResultsBtn.addEventListener('click', clearResults);
 
-    <div class="mySlides fade" style="display: none;">
-      <div class="numbertext">5 / 5</div>
-      <img src="imgs/image5.jpg" alt="Slide 5">
-      <div class="text">Sky 5</div>
-    </div>
+        // Utility Functions
+        function showLoading() {
+            loading.classList.add('show');
+        }
 
-    <!-- ปุ่มซ้ายขวา -->
-    <a class="prev" onclick="plusSlides(-1)">❮</a>
-    <a class="next" onclick="plusSlides(1)">❯</a>
+        function hideLoading() {
+            loading.classList.remove('show');
+        }
 
-    <!-- จุดในรูป -->
-    <div class="dot-container">
-      <span class="dot active" onclick="currentSlide(1)"></span>
-      <span class="dot" onclick="currentSlide(2)"></span>
-      <span class="dot" onclick="currentSlide(3)"></span>
-      <span class="dot" onclick="currentSlide(4)"></span>
-      <span class="dot" onclick="currentSlide(5)"></span>
-    </div>
+        function showMessage(message, type = 'success') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type;
+            messageDiv.textContent = message;
+            messages.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
 
-  </div>
-  <script>
-    let slideIndex = 1;
-    showSlides(slideIndex);
+        function clearMessages() {
+            messages.innerHTML = '';
+        }
 
-    function plusSlides(n) {
-      showSlides(slideIndex += n);
-    }
+        // API Functions
+        async function apiRequest(url, options = {}) {
+            showLoading();
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
 
-    function currentSlide(n) {
-      showSlides(slideIndex = n);
-    }
+                if (!response.ok) {
+                    let errorMessage = `HTTP ${response.status}`;
+                    try {
+                        const error = await response.json();
+                        errorMessage = error.error || errorMessage;
+                    } catch (e) {
+                        // If response is not JSON, use status message
+                        errorMessage = response.statusText || errorMessage;
+                    }
+                    throw new Error(errorMessage);
+                }
 
-    function showSlides(n) {
-      let i;
-      let slides = document.getElementsByClassName("mySlides");
-      let dots = document.getElementsByClassName("dot");
-      if (n > slides.length) { slideIndex = 1 }
-      if (n < 1) { slideIndex = slides.length }
-      for (i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none";
-      }
-      for (i = 0; i < dots.length; i++) {
-        dots[i].className = dots[i].className.replace(" active", "");
-      }
-      slides[slideIndex - 1].style.display = "block";
-      dots[slideIndex - 1].className += " active";
-    }
-  </script>
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // GET All Slides
+        async function loadAllSlides() {
+            clearMessages();
+            try {
+                const slides = await apiRequest(API_BASE);
+                currentSlides = slides;
+                displaySlides(slides);
+                showMessage(`โหลด ${slides.length} slides สำเร็จ`);
+            } catch (error) {
+                showMessage(`เกิดข้อผิดพลาด: ${error.message}`, 'error');
+            }
+        }
+
+        // GET Single Slide
+        async function handleGetSlide(e) {
+            e.preventDefault();
+            clearMessages();
+            
+            const slideId = document.getElementById('slideId').value.trim();
+            if (!slideId) {
+                showMessage('กรุณาใส่ Slide ID', 'error');
+                return;
+            }
+
+            try {
+                const slide = await apiRequest(`${API_BASE}/${slideId}`);
+                displaySlides([slide]);
+                showMessage('ค้นหา Slide สำเร็จ');
+            } catch (error) {
+                showMessage(`ไม่พบ Slide: ${error.message}`, 'error');
+            }
+        }
+
+        // POST New Slide
+        async function handleAddSlide(e) {
+            e.preventDefault();
+            clearMessages();
+            
+            const src = document.getElementById('newSrc').value.trim();
+            const caption = document.getElementById('newCaption').value.trim();
+
+            if (!src) {
+                showMessage('กรุณาใส่ URL รูปภาพ', 'error');
+                return;
+            }
+
+            try {
+                const newSlide = await apiRequest(API_BASE, {
+                    method: 'POST',
+                    body: JSON.stringify({ src, caption })
+                });
+                
+                currentSlides.push(newSlide);
+                displaySlides(currentSlides);
+                showMessage('เพิ่ม Slide สำเร็จ');
+                
+                // Clear form
+                document.getElementById('newSrc').value = '';
+                document.getElementById('newCaption').value = '';
+            } catch (error) {
+                showMessage(`เกิดข้อผิดพลาด: ${error.message}`, 'error');
+            }
+        }
+
+        // PUT Update Slide
+        async function updateSlide(id, src, caption) {
+            clearMessages();
+            try {
+                const updatedSlide = await apiRequest(`${API_BASE}/${id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ src, caption })
+                });
+                
+                const index = currentSlides.findIndex(slide => slide.id === id);
+                if (index !== -1) {
+                    currentSlides[index] = updatedSlide;
+                    displaySlides(currentSlides);
+                }
+                
+                showMessage('อัปเดต Slide สำเร็จ');
+            } catch (error) {
+                showMessage(`เกิดข้อผิดพลาด: ${error.message}`, 'error');
+            }
+        }
+
+        // DELETE Slide
+        async function deleteSlide(id) {
+            if (!confirm('คุณต้องการลบ Slide นี้หรือไม่?')) {
+                return;
+            }
+
+            clearMessages();
+            try {
+                await apiRequest(`${API_BASE}/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                currentSlides = currentSlides.filter(slide => slide.id !== id);
+                displaySlides(currentSlides);
+                showMessage('ลบ Slide สำเร็จ');
+            } catch (error) {
+                showMessage(`เกิดข้อผิดพลาด: ${error.message}`, 'error');
+            }
+        }
+
+        // Display Functions
+        function displaySlides(slides) {
+            slidesGrid.innerHTML = '';
+            
+            if (slides.length === 0) {
+                slidesGrid.innerHTML = '<p style="text-align: center; color: #6c757d; grid-column: 1/-1;">ไม่พบ Slides</p>';
+                return;
+            }
+
+            slides.forEach(slide => {
+                const slideCard = createSlideCard(slide);
+                slidesGrid.appendChild(slideCard);
+            });
+        }
+
+        function createSlideCard(slide) {
+            const card = document.createElement('div');
+            card.className = 'slide-card';
+            card.innerHTML = `
+                <img src="${escapeHtml(slide.src)}" alt="${escapeHtml(slide.caption || 'No caption')}" class="slide-image" 
+                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjhGOUZBIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNkM3NTdEIiBmb250LXNpemU9IjE0Ij5JbWFnZSBub3QgZm91bmQ8L3RleHQ+Cjwvc3ZnPgo='">
+                <div class="slide-content">
+                    <div class="slide-id">ID: ${escapeHtml(slide.id)}</div>
+                    <div class="slide-caption">${escapeHtml(slide.caption || 'ไม่มีคำอธิบาย')}</div>
+                    <div class="slide-src">${escapeHtml(slide.src)}</div>
+                    <div class="slide-actions">
+                        <button class="btn btn-warning" onclick="showEditForm('${escapeHtml(slide.id)}')">แก้ไข</button>
+                        <button class="btn btn-danger" onclick="deleteSlide('${escapeHtml(slide.id)}')">ลบ</button>
+                    </div>
+                    <div class="edit-form" id="editForm-${escapeHtml(slide.id)}">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>URL รูปภาพ</label>
+                                <input type="url" id="editSrc-${escapeHtml(slide.id)}" value="${escapeHtml(slide.src)}">
+                            </div>
+                            <div class="form-group">
+                                <label>คำอธิบาย</label>
+                                <input type="text" id="editCaption-${escapeHtml(slide.id)}" value="${escapeHtml(slide.caption || '')}">
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <button class="btn btn-primary" onclick="saveEdit('${escapeHtml(slide.id)}')">บันทึก</button>
+                            <button class="btn btn-secondary" onclick="cancelEdit('${escapeHtml(slide.id)}')">ยกเลิก</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        // Utility function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Edit Functions
+        function showEditForm(id) {
+            const editForm = document.getElementById(`editForm-${id}`);
+            const card = editForm.closest('.slide-card');
+            
+            editForm.classList.add('show');
+            card.classList.add('edit-mode');
+        }
+
+        function cancelEdit(id) {
+            const editForm = document.getElementById(`editForm-${id}`);
+            const card = editForm.closest('.slide-card');
+            
+            editForm.classList.remove('show');
+            card.classList.remove('edit-mode');
+        }
+
+        function saveEdit(id) {
+            const src = document.getElementById(`editSrc-${id}`).value.trim();
+            const caption = document.getElementById(`editCaption-${id}`).value.trim();
+            
+            if (!src) {
+                showMessage('กรุณาใส่ URL รูปภาพ', 'error');
+                return;
+            }
+            
+            updateSlide(id, src, caption);
+            cancelEdit(id);
+        }
+
+        function clearResults() {
+            slidesGrid.innerHTML = '';
+            currentSlides = [];
+            clearMessages();
+            showMessage('ล้างผลลัพธ์แล้ว');
+        }
+
+        // Load slides on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, initializing...');
+            loadAllSlides();
+        });
+    </script>
 </body>
 </html>
