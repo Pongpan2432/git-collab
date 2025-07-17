@@ -47,7 +47,7 @@ app.get("/api/slides/:id", (req, res) => {
 app.post("/api/slides", (req, res) => {
   const { src, caption } = req.body;
   if (!src) return res.status(400).json({ error: "`src` is required" });
-  
+
   const newSlide = { id: uuid(), src, caption: caption ?? "" };
   slides.push(newSlide);
   res.status(201).json(newSlide);
@@ -57,11 +57,11 @@ app.post("/api/slides", (req, res) => {
 app.put("/api/slides/:id", (req, res) => {
   const idx = slides.findIndex(s => s.id === req.params.id);
   if (idx === -1) return res.status(404).json({ error: "Not found" });
-  
+
   const { src, caption } = req.body;
   if (src !== undefined) slides[idx].src = src;
   if (caption !== undefined) slides[idx].caption = caption;
-  
+
   res.json(slides[idx]);
 });
 
@@ -69,7 +69,7 @@ app.put("/api/slides/:id", (req, res) => {
 app.delete("/api/slides/:id", (req, res) => {
   const idx = slides.findIndex(s => s.id === req.params.id);
   if (idx === -1) return res.status(404).json({ error: "Not found" });
-  
+
   const removed = slides.splice(idx, 1)[0];
   res.json(removed);
 });
